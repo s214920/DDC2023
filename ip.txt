@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Define the network interface
+INTERFACE="ens33"
+
+# Define the static IP address, subnet mask, gateway, and DNS servers
+IP_ADDRESS="192.168.108.132/24"
+GATEWAY="192.168.180.2"
+DNS_SERVERS="8.8.8.8,8.8.4.4"
+
+# Create a new Netplan configuration file
+echo "network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    $INTERFACE:
+      dhcp4: no
+      addresses:
+        - $IP_ADDRESS
+      gateway4: $GATEWAY
+      nameservers:
+          addresses: [$DNS_SERVERS]
+" | sudo tee /etc/netplan/01-netcfg.yaml > /dev/null
+
+# Apply the new network configuration
+sudo netplan apply
